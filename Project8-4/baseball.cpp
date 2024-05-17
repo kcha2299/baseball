@@ -45,6 +45,15 @@ public:
 		result.strikes++;
 	}
 
+	void countBall(char number, int numberIdx) {
+		for (int qIdx = 0; qIdx < 3; qIdx++) {
+			if (qIdx == numberIdx) continue;
+			if (number != question[qIdx]) continue;
+
+			result.balls++;
+		}
+	}
+
 	GuessResult guess(const string& guessNumber) {
 		assertIlegalArgument(guessNumber);
 		if (guessNumber == question) {
@@ -53,13 +62,7 @@ public:
 
 		for (int index = 0; index < 3; index++) {
 			countStrike(guessNumber[index], index);
-
-		}
-
-		if ((guessNumber[0] == question[0] && guessNumber[1] == question[2] && guessNumber[2] == question[1]) ||
-			(guessNumber[1] == question[1] && guessNumber[0] == question[2] && guessNumber[2] == question[0]) ||
-			(guessNumber[2] == question[2] && guessNumber[0] == question[1] && guessNumber[1] == question[0])) {
-			result = { false, 1, 2 };
+			countBall(guessNumber[index], index);
 		}
 
 		return result;
