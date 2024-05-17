@@ -12,7 +12,7 @@ struct GuessResult {
 class Baseball {
 public:
 	explicit Baseball(const string& question)
-		: question(question)
+		: question(question), result{ false, 0, 0 }
 	{
 	}
 
@@ -39,20 +39,26 @@ public:
 		}
 	}
 
+	void countStrike(char number, int numberIdx) {
+		if (number != question[numberIdx]) return;
+		
+		result.strikes++;
+	}
+
 	GuessResult guess(const string& guessNumber) {
 		assertIlegalArgument(guessNumber);
 		if (guessNumber == question) {
 			return { true, 3, 0 };
 		}
-		if ((guessNumber[0] == question[0] && guessNumber[1] == question[1]) ||
-			(guessNumber[0] == question[0] && guessNumber[2] == question[2]) ||
-			(guessNumber[1] == question[1] && guessNumber[2] == question[2])) {
-			return { false, 2, 0 };
+
+		for (int index = 0; index < 3; index++) {
+			countStrike(guessNumber[index], index);
 		}
 
-		return { false, 0, 0 };
+		return result;
 	}
 
 private:
 	string question;
+	GuessResult result;
 };
